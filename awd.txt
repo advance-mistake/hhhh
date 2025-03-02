@@ -1,12 +1,13 @@
-def brute_force(password_list, target_password):
-    for password in password_list:
-        if password.strip() == target_password:
-            print(f"Password found: {password}")
-            return
-    print("Password not found.")
+from scapy.all import sniff, TCP, IP
+
+def packet_callback(packet):
+    if packet.haslayer(TCP) and packet.haslayer(IP):
+        src_ip = packet[IP].src
+        dst_ip = packet[IP].dst
+        src_port = packet[TCP].sport
+        dst_port = packet[TCP].dport
+        print(f"TCP Packet: {src_ip}:{src_port} -> {dst_ip}:{dst_port}")
 
 if __name__ == "__main__":
-    target_password = input("Enter target password: ")
-    with open("passwords.txt", "r") as file:
-        password_list = file.readlines()
-    brute_force(password_list, target_password)
+    print("Starting packet sniffer...")
+    sniff(prn=packet_callback, filter="tcp", count=10)
