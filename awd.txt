@@ -1,0 +1,12 @@
+def brute_force(password_list, target_password):
+    for password in password_list:
+        if password.strip() == target_password:
+            print(f"Password found: {password}")
+            return
+    print("Password not found.")
+
+if __name__ == "__main__":
+    target_password = input("Enter target password: ")
+    with open("passwords.txt", "r") as file:
+        password_list = file.readlines()
+    brute_force(password_list, target_password)
